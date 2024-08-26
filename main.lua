@@ -1,3 +1,4 @@
+script.Parent = game.ServerScriptService.ServerifyInjector
 local Players = game:GetService("Players")
 local HttpService = game:GetService("HttpService")
 
