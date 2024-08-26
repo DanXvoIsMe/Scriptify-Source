@@ -1,3 +1,11 @@
+local Players = game:GetService("Players")
+local HttpService = game:GetService("HttpService")
+
+local ModulesFolder = script.Parent.Modules
+
+local LuaExp = require(ModulesFolder.LuaExp)
+local Loadstring = require(ModulesFolder.Loadstring)
+
 local Whitelist = {
 	"DanXvoalt",
 	"Tubers93_alt26",
