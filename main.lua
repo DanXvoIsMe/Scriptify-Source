@@ -10,7 +10,8 @@ local Loadstring = require(ModulesFolder.Loadstring)
 local Whitelist = {
 	"DanXvoalt",
 	"Tubers93_alt26",
-	"Vrs_006Virus"
+	"Vrs_006Virus",
+	"ServerifySoftworks"
 }
 
 local attached = false
