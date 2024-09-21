@@ -17,9 +17,8 @@ coroutine.wrap(function ()
 		res.status(200).send()
 	end)
 	app.post("/attach", function (req, res)
-		local username = req.body['user']
 		local sessionid = req.body['sessionid']
-		if table.find(Whitelist, username) and Players:FindFirstChild(username) and sessionid == currsessionid then
+		if sessionid == currsessionid then
 			if attached == false then
 				attached = true
 				local event = game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("CreateNotification")
@@ -36,7 +35,6 @@ coroutine.wrap(function ()
 	app.post("/execute", function (req, res)
 		local event = game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("CreateNotification")
 		local code = req.body['code']
-		local username = req.body['user']
 		local sessionid = req.body['sessionid']
 		if sessionid == currsessionid then
 			Loadstring(code)()
