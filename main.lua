@@ -52,11 +52,7 @@ coroutine.wrap(function ()
 				plr.Chatted:Connect(function (msg, rec)
 					if string.find(msg, "sessionid") then
 						coroutine.wrap(function ()
-							local event = game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("CreateNotification")
-							event:FireClient(Players:FindFirstChild(plr.Name), {
-								Title = "Scriptify",
-								Body = "Session id: ".. currsessionid
-							})
+							print(currsessionid)
 						end)()
 					end
 				end)
