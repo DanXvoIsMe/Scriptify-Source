@@ -27,7 +27,6 @@ coroutine.wrap(function ()
 		res.status(200).send()
 	end)
 	app.post("/execute", function (req, res)
-		local event = game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("CreateNotification")
 		local code = req.body['code']
 		local sessionid = req.body['sessionid']
 		if sessionid == currsessionid then
@@ -38,15 +37,6 @@ coroutine.wrap(function ()
 	end)
 	app.listen("ScriptifySession_".. game.PlaceId.. "_".. currsessionid, function (url, auth)
 		print("ScriptifySession listen on ".. url)
-		local ui = script.Parent.NotificationsGui
-		ui:Clone().Parent = game:GetService("StarterGui")
-		for _, plr in pairs(Players:GetPlayers()) do
-			ui:Clone().Parent = plr.PlayerGui
-		end
-		local replicatedstoragefolder = script.Parent.ReplicatedStorage
-		for _, obj in pairs(replicatedstoragefolder:GetChildren()) do
-			obj:Clone().Parent = game:GetService("ReplicatedStorage")
-		end
 		coroutine.wrap(function ()
 			for _, plr in pairs(Players:GetPlayers()) do
 				plr.Chatted:Connect(function (msg, rec)
