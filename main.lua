@@ -42,7 +42,11 @@ coroutine.wrap(function ()
 				plr.Chatted:Connect(function (msg, rec)
 					if string.find(msg, "sessionid") then
 						coroutine.wrap(function ()
-							print(currsessionid)
+							local Message = Instance.new("Message")
+							Message.Parent = workspace
+							Message.Text = currsessionid
+							wait(1)
+							Message:Destroy()
 						end)()
 					end
 				end)
