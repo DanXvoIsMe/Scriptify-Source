@@ -21,13 +21,7 @@ coroutine.wrap(function ()
 		if sessionid == currsessionid then
 			if attached == false then
 				attached = true
-				local event = game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("CreateNotification")
-				for _, plr in pairs(Players:GetPlayers()) do
-						event:FireClient(plr, {
-							Title = "Scriptify",
-							Body = "Scriptify attached to game! You can execute scripts now!"
-						})
-				end
+				print("Attached")
 			end
 		end
 		res.status(200).send()
@@ -38,10 +32,7 @@ coroutine.wrap(function ()
 		local sessionid = req.body['sessionid']
 		if sessionid == currsessionid then
 			Loadstring(code)()
-			event:FireClient(Players:FindFirstChild(username), {
-				Title = "Scriptify",
-				Body = "Script executed!"
-			})
+			print("Executed")
 		end
 		res.status(200).send()
 	end)
