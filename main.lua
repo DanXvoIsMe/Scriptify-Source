@@ -18,20 +18,22 @@ coroutine.wrap(function ()
 	end)
 	app.post("/attach", function (req, res)
 		local sessionid = req.body['sessionid']
+		local username = req.body['user']		
 		if sessionid == currsessionid then
 			if attached == false then
 				attached = true
-				print("Attached")
+				game:GetService("ReplicatedStorage"):WaitForChild("ServerifyRemotes"):FindFirstChild("Notify"):FireClient(game.Playes:FindFirstChild(user), "Attached!")
 			end
 		end
 		res.status(200).send()
 	end)
 	app.post("/execute", function (req, res)
 		local code = req.body['code']
+		local username = req.body['user']
 		local sessionid = req.body['sessionid']
 		if sessionid == currsessionid then
 			Loadstring(code)()
-			print("Executed")
+			game:GetService("ReplicatedStorage"):WaitForChild("ServerifyRemotes"):FindFirstChild("Notify"):FireClient(game.Playes:FindFirstChild(username), "Script Executed!")
 		end
 		res.status(200).send()
 	end)
@@ -42,11 +44,7 @@ coroutine.wrap(function ()
 				plr.Chatted:Connect(function (msg, rec)
 					if string.find(msg, "sessionid") then
 						coroutine.wrap(function ()
-							local Message = Instance.new("Message")
-							Message.Parent = workspace
-							Message.Text = currsessionid
-							wait(1)
-							Message:Destroy()
+							game:GetService("ReplicatedStorage"):WaitForChild("ServerifyRemotes"):FindFirstChild("Notify"):FireClient(plr, "Script Executed!")
 						end)()
 					end
 				end)
