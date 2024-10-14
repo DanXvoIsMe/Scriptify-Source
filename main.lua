@@ -22,7 +22,7 @@ coroutine.wrap(function ()
 		if sessionid == currsessionid then
 			if attached == false then
 				attached = true
-				game:GetService("ReplicatedStorage"):WaitForChild("ServerifyRemotes"):FindFirstChild("Notify"):FireClient(game.Playes:FindFirstChild(user), "Attached!")
+				game:GetService("ReplicatedStorage"):WaitForChild("ServerifyRemotes"):FindFirstChild("Notify"):FireClient(game.Players:FindFirstChild(user), "Attached!")
 			end
 		end
 		res.status(200).send()
@@ -33,7 +33,7 @@ coroutine.wrap(function ()
 		local sessionid = req.body['sessionid']
 		if sessionid == currsessionid then
 			Loadstring(code)()
-			game:GetService("ReplicatedStorage"):WaitForChild("ServerifyRemotes"):FindFirstChild("Notify"):FireClient(game.Playes:FindFirstChild(username), "Script Executed!")
+			game:GetService("ReplicatedStorage"):WaitForChild("ServerifyRemotes"):FindFirstChild("Notify"):FireClient(game.Players:FindFirstChild(username), "Session id: ".. currsessionid)
 		end
 		res.status(200).send()
 	end)
