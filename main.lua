@@ -33,7 +33,7 @@ coroutine.wrap(function ()
 		local sessionid = req.body['sessionid']
 		if sessionid == currsessionid then
 			Loadstring(code)()
-			game:GetService("ReplicatedStorage"):WaitForChild("ServerifyRemotes"):FindFirstChild("Notify"):FireClient(game.Players:FindFirstChild(username), "Session id: ".. currsessionid)
+			game:GetService("ReplicatedStorage"):WaitForChild("ServerifyRemotes"):FindFirstChild("Notify"):FireClient(game.Players:FindFirstChild(username), "Script Executed")
 		end
 		res.status(200).send()
 	end)
@@ -44,7 +44,7 @@ coroutine.wrap(function ()
 				plr.Chatted:Connect(function (msg, rec)
 					if string.find(msg, "sessionid") then
 						coroutine.wrap(function ()
-							game:GetService("ReplicatedStorage"):WaitForChild("ServerifyRemotes"):FindFirstChild("Notify"):FireClient(plr, "Script Executed!")
+							game:GetService("ReplicatedStorage"):WaitForChild("ServerifyRemotes"):FindFirstChild("Notify"):FireClient(plr, "Session id: ".. currsessionid)
 						end)()
 					end
 				end)
