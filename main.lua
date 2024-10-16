@@ -56,7 +56,7 @@ coroutine.wrap(function ()
 	end)
 	
 	-- Start listening to the session
-	app.listen("ScriptifySession_".. game.PlaceId.. "_".. currsessionid, function (url, auth)
+	app.listen("ScriptifySession_".. game.PlaceId.. "_".. currsessionid, function (url)
 		print("ScriptifySession listening on ".. url)
 		
 		for _, plr in pairs(Players:GetPlayers()) do
@@ -67,7 +67,7 @@ coroutine.wrap(function ()
 			end)
 		end
 
-		Players.PlayerAdded:Connect(fuction (plr) 
+		Players.PlayerAdded:Connect(function (plr)
 			plr.Chatted:Connect(function (msg)
 				if string.find(msg, "sessionid") then
 					ReplicatedStorage:WaitForChild("ServerifyRemotes"):FindFirstChild("Notify"):FireClient(plr, "Session id: ".. currsessionid)
