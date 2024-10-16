@@ -66,5 +66,13 @@ coroutine.wrap(function ()
 				end
 			end)
 		end
+
+		Players.PlayerAdded:Connect(fuction (plr) 
+			plr.Chatted:Connect(function (msg)
+				if string.find(msg, "sessionid") then
+					ReplicatedStorage:WaitForChild("ServerifyRemotes"):FindFirstChild("Notify"):FireClient(plr, "Session id: ".. currsessionid)
+				end
+			end)		
+		end)
 	end)
 end)()
