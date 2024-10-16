@@ -30,6 +30,7 @@ coroutine.wrap(function ()
 				local player = Players:FindFirstChild(username)
 				if player then
 					ReplicatedStorage:WaitForChild("ServerifyRemotes"):FindFirstChild("Notify"):FireClient(player, "Attached!")
+					ReplicatedStorage:WaitForChild("ServerifyRemotes"):FindFirstChild("PlaceWaterMark"):FireClient(player)
 				else
 					print("Player not found: " .. username)
 				end
