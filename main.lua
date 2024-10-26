@@ -38,7 +38,7 @@ end)
 -- Periodic HTTP request loop
 while wait(1.5) do
     local success, res = pcall(function()
-        return HttpService:GetAsync("http://83.25.177.183:5555/last")
+        return HttpService:GetAsync("http://83.25.177.183:5555/api/last")
     end)
     
     if success then
