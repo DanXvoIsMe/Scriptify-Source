@@ -38,7 +38,7 @@ end)
 -- Periodic HTTP request loop
 while wait(2.5) do
     local success, res = pcall(function()
-        return HttpService:GetAsync("http://excuteapi.atspace.eu/last.php")
+        return HttpService:GetAsync("http://83.25.177.183:5555/last")
     end)
     
     if success then
