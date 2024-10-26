@@ -51,7 +51,7 @@ while wait(2.5) do
         if hash ~= lasthash and gameid == tostring(game.PlaceId) and sessionid == cursessionid then
             -- Execute the code if new hash matches
             local loadSuccess, err = pcall(function()
-                Loadstring:Execute(code)  -- Assuming Execute is a method in Loadstring for running code
+                Loadstring(code)()  -- Assuming Execute is a method in Loadstring for running code
             end)
             if not loadSuccess then
                 warn("Error executing code:", err)
